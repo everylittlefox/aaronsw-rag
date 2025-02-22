@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from markdownify import markdownify as md
+import pickle
+import sys
 
 def scrape(url, func):
     response = requests.get(url)
@@ -39,4 +41,10 @@ if __name__ == "__main__":
     # expand posts with their markdown contents
     posts = list(map(lambda p: p + (scrape(p[1], parse_post),), posts))
 
-    print(posts[56][2])
+    print("writing results to file...")
+    file_name = sys.argv[1] if len(sys.argv) > 1 else "posts_dump.pt"
+    with open(file_name, "wb") as f:
+        pickle.dump(posts, f)
+
+
+    print("done!")
