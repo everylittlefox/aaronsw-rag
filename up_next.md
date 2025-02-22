@@ -1,0 +1,13 @@
+- [ ] tokenize and build embedding vectors for the posts
+- [ ] scrape and generate example questions for use in least-to-most prompting
+  - [ ] generate subquestions whose answers progressively build towards the answer to the user's question
+  - [ ] for each sub question
+    - [ ] embed and retrieve
+    - [ ] rerank results
+    - [ ] append to context and generate
+    - [ ] append generation to running context
+    - [ ] feed running context for next iteration
+- [ ] decide on an embedding model
+- [ ] decide on a cross-encoding (reranking) model
+- [ ] decide on chunk size and the value of k for top-k results from vector search
+- [ ] decide on whether to do query rewriting or not
