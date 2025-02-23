@@ -20,15 +20,41 @@ def get_posts_archive(url: str, soup: BeautifulSoup):
 
     return map(lambda post: (post.text, urljoin(url, post.attrs['href'])), archive)
 
+def embed_footnote(url, fn, fns, body_text, soup):
+    inner_fns = fn.find_all('sup')
+
+    if len(inner_fns) > 0:
+        for inner_fn in inner_fns:
+            inner_fn_id = inner_fn.find("a").attrs["href"][1:]
+            inner_fn = fns.select(f'li[id="{inner_fn_id}"]')[0].extract()
+            embed_footnote(url, inner_fn, fns, fn, soup)
+
+    fn_reference = fn.select('p:last-child a[rev="footnote"]')[0].extract()
+    fn_reference = fn_reference.attrs['href']
+    fn_text = f" ({fn.text.strip()})"
+    fn_text = soup.new_string(fn_text)
+    fn_reference = fn_reference[1:]
+
+    body_text.select(f'sup[id="{fn_reference}"]')[0].replace_with(fn_text)
+
 def parse_post(url: str, soup: BeautifulSoup):
     post_content = soup.select('div.content')[0]
-
-    # remove comments section
-    post_content.select('div#comments_body')[0].decompose()
 
     # remove the script tags from the post
     for s in post_content.find_all('script'):
         s.decompose()
+
+    # remove comments section
+    post_content.select('div#comments_body')[0].decompose()
+
+    # embed footnotes in text
+    footnotes = post_content.select('div.footnotes')
+    if len(footnotes) > 0:
+        footnotes = footnotes[0].extract()
+        fn = footnotes.select('li')[0]
+        while fn is not None:
+            embed_footnote(url, fn, footnotes, post_content, soup)
+            fn = fn.find_next_sibling()
 
     return md(str(post_content))
 

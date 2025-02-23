@@ -1,5 +1,11 @@
 import pickle
 import sys
+import re
+
+def split_text_into_sentences(text: str):
+    pattern = re.compile(r'(?<!\w\.\w.)(?<!\b[A-Z][a-z]\.)(?<![A-Z]\.)(?<=\.|\?)\s|\\n')
+
+    return list(map(lambda s: s.strip().replace("\n", ""), pattern.split(text)))
 
 if __name__ == "__main__":
     if len(sys.argv) <= 1:
@@ -9,6 +15,6 @@ if __name__ == "__main__":
     with open(sys.argv[1], "rb") as f:
         posts = pickle.load(f)
 
-    print(posts[0])
-    print("num posts:", len(posts))
-    print("num invalids:", len(list(filter(lambda p: p is None, posts))))
+    for p in posts:
+        if "censorship-resistant" in p[0].lower():
+            print(p[2])
