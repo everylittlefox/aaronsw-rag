@@ -1,5 +1,5 @@
 import torch
-from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM
+from transformers import pipeline, AutoModelForCausalLM, BitsAndBytesConfig
 from dotenv import load_dotenv
 from huggingface_hub import login
 import os
@@ -8,35 +8,33 @@ load_dotenv()
 
 login(token=os.getenv("HUG_TOKEN"))
 
-checkpoint = "HuggingFaceTB/SmolLM-135M"
-device = "cpu" # for GPU usage or "cpu" for CPU usage
-tokenizer = AutoTokenizer.from_pretrained(checkpoint)
-# for multiple GPUs install accelerate and do `model = AutoModelForCausalLM.from_pretrained(checkpoint, device_map="auto")`
-model = AutoModelForCausalLM.from_pretrained(checkpoint, torch_dtype=torch.bfloat16).to(device)
-inputs = tokenizer.encode("def print_hello_world():", return_tensors="pt",).to(device)
+quant_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    llm_int8_threshold=6.0  # Optional: adjust the outlier threshold if needed.
+)
 
-outputs = model.generate(inputs,
-                         attention_mask=torch.ones_like(inputs),
-                         pad_token_id=tokenizer.pad_token_type_id)
+# Use the QLoRA quantized model from Hugging Face Hub:
+model_id = "meta-llama/Llama-3.2-1B-Instruct"
 
-print(tokenizer.decode(outputs[0]))
+model = AutoModelForCausalLM.from_pretrained(model_id,
+                                             quantization_config=quant_config,
+                                             device_map="auto",
+                                             torch_dtype=torch.bfloat16)
 
+# Set up the text-generation pipeline.
+# Using bfloat16 (or float16 if bfloat16 isn’t supported) and auto device mapping.
+generator = pipeline(
+    "text-generation",
+    model=model
+)
 
-login(token=os.getenv("HUG_TOKEN"))
+# Define a conversational prompt.
+prompt = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "Can you explain how QLoRA works?"}
+]
 
-# model_id = "meta-llama/Llama-3.2-1B-Instruct"
-# pipe = pipeline(
-#     "text-generation",
-#     model=model_id,
-#     torch_dtype=torch.bfloat16,
-#     device_map="auto",
-# )
-# messages = [
-#     {"role": "system", "content": "You are a sentence extractor. Given a text in Markdown format, you return a Python list of all the sentences in the text."},
-#     {"role": "user", "content": posts[0][2]},
-# ]
-# outputs = pipe(
-#     messages,
-#     max_new_tokens=256,
-# )
-# print(outputs[0]["generated_text"][-1])
+# Generate a response.
+output = generator(prompt, max_new_tokens=100)
+print(output[0]["generated_text"])
+
