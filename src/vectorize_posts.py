@@ -1,11 +1,12 @@
 import pickle
 import sys
-import re
+import nltk
+
+nltk.download('punkt')
+nltk.download('punkt_tab')
 
 def split_text_into_sentences(text: str):
-    pattern = re.compile(r'(?<!\w\.\w.)(?<!\b[A-Z][a-z]\.)(?<![A-Z]\.)(?<=\.|\?)\s|\\n')
-
-    return list(map(lambda s: s.strip().replace("\n", ""), pattern.split(text)))
+    return nltk.sent_tokenize(text)
 
 if __name__ == "__main__":
     if len(sys.argv) <= 1:
@@ -15,6 +16,7 @@ if __name__ == "__main__":
     with open(sys.argv[1], "rb") as f:
         posts = pickle.load(f)
 
-    for p in posts:
-        if "censorship-resistant" in p[0].lower():
-            print(p[2])
+    for s in split_text_into_sentences(posts[0][2]):
+        print(s)
+        print()
+        print()
