@@ -23,10 +23,14 @@ def split_text_into_sentences(text: str):
 def contexify(sentences: list[str]):
     contexified = []
     for idx, s in enumerate(sentences):
+        first = idx == 0
+        last = idx == len(sentences) - 1
         contexified.append(dict(value=s,
                                 pos=idx,
-                                before=idx-1,
-                                after= -1 if idx == len(sentences) - 1 else idx + 1))
+                                before= (idx-1,) if not last else (idx-2,idx-1),
+                                after= (1,2) if first
+                                             else (idx + 1,) if not last
+                                             else (-1,)))
 
     return contexified
 
@@ -41,4 +45,4 @@ if __name__ == "__main__":
 
     cnt = contexify(split_text_into_sentences(posts[85][2]))
 
-    print(cnt[1])
+    print(cnt[-1])
