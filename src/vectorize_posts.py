@@ -1,6 +1,7 @@
 import pickle
 import sys
 import nltk
+import re
 
 try:
     nltk.data.find('tokenizers/punkt')
@@ -11,7 +12,11 @@ except LookupError:
 def split_text_into_sentences(text: str):
     # remove the last two sentences which are the call to follow on Twitter
     # and the date of publication
-    return list(map(lambda s: s.strip(), nltk.sent_tokenize(text)[:-2]))
+    sentences = map(lambda s: s.strip(), nltk.sent_tokenize(text)[:-2])
+    # remove new lines and the '====' used to delineate the heading of a post
+    sentences = map(lambda s: re.sub(r"[\=\n]", "", s), sentences)
+
+    return list(sentences)
 
 # gives order to chunked sentences as well as attaches the locations of the
 # sentences before and after
@@ -34,6 +39,6 @@ if __name__ == "__main__":
     with open(sys.argv[1], "rb") as f:
         posts = pickle.load(f)
 
-    cnt = contexify(split_text_into_sentences(posts[75][2]))
+    cnt = contexify(split_text_into_sentences(posts[85][2]))
 
     print(cnt[1])
