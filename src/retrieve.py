@@ -9,7 +9,7 @@ import ollama
 
 SYSTEM_PROMPT = (
     "You are a helpful assistant designed to answer questions solely by referencing "
-    "the provided text snippets from the blog of Aaron Swartz.\n"
+    "these snippets you found by searching the blog of Aaron Swartz.\n"
     "When generating your answer, follow these guidelines:\n\n"
     "- Base your answer exclusively on the information contained in the provided snippets.\n"
     "- Do not add, infer, or extrapolate any details not explicitly present in the snippets.\n\n"
@@ -19,8 +19,9 @@ SYSTEM_PROMPT = (
     "- If the snippets don't provide enough information, state that the context is insufficient.\n\n"
     "- Do not incorporate any external knowledge beyond the provided snippets.\n"
     "- If uncertain, ask for clarification rather than assuming information not present.\n"
-    "- The user does not have access to the snippets, so restate them clearly."
-    "- The snippets are in Markdown format. Pay attention to the formatting to gleam information like links."
+    "- The user does not have access to the snippets, so restate them clearly but do not quote verbatim.\n"
+    "- The snippets are in Markdown format. Pay attention to the formatting to gleam information like links.\n"
+    "- If you can't give an answer, you can ask clarifying questions using the user's question and the snippets."
 )
 
 def build_index(metadata):
@@ -85,20 +86,20 @@ if __name__ == "__main__":
     inp = smodel.encode([query])
     scores, idxs = neighbors.kneighbors(inp)
 
-    context = "\n-----\n".join([f"Snippet {j}: {retrieve_with_context(metadata, i)}" for j,i in enumerate(idxs[0])])
-    print(context)
+    documents = "\n-----\n".join([f"Snippet {j}: {retrieve_with_context(metadata, i)}" for j,i in enumerate(idxs[0])])
+    print(documents)
     print("------")
     print()
     messages = [
         {"role": "system", "content": f"{SYSTEM_PROMPT}\n\n"
                 "Context:\n"
-                f"{context}"},
+                f"{documents}"},
         {"role": "user", "content": query}
     ]
 
-    ollama.pull("llama3.2:3b-instruct-q3_K_S")
+    ollama.pull("llama3.2:3b-instruct-q4_K_S")
     response = ollama.chat(
-        model="llama3.2:3b-instruct-q3_K_S",
+        model="llama3.2:3b-instruct-q4_K_S",
         messages=messages,
     )
 
