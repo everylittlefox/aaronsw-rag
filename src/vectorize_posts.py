@@ -6,10 +6,10 @@ from sentence_transformers import SentenceTransformer
 import utils
 
 try:
-    nltk.data.find('tokenizers/punkt')
+    nltk.data.find("tokenizers/punkt")
 except LookupError:
-    nltk.download('punkt')
-    nltk.download('punkt_tab')
+    nltk.download("punkt")
+    nltk.download("punkt_tab")
 
 
 def split_text_into_sentences(text: str):
@@ -32,13 +32,15 @@ def contexify(embeddings):
     for idx, (s, emb) in enumerate(embeddings):
         first = idx == 0
         last = idx == len(embeddings) - 1
-        contexified.append(dict(embedding=emb,
-                                text=s,
-                                pos=idx,
-                                before= (idx-1,) if not last else (idx-2,idx-1),
-                                after= (1,2) if first
-                                             else (idx + 1,) if not last
-                                             else (-1,)))
+        contexified.append(
+            dict(
+                embedding=emb,
+                text=s,
+                pos=idx,
+                before=(idx - 1,) if not last else (idx - 2, idx - 1),
+                after=(1, 2) if first else (idx + 1,) if not last else (-1,),
+            )
+        )
 
     return contexified
 
@@ -72,7 +74,6 @@ if __name__ == "__main__":
     print("loading posts...")
     with open(sys.argv[1], "rb") as f:
         posts = pickle.load(f)
-
 
     vp = vectorize(posts)
     print(f"embedded {len(vp)} sentences")
