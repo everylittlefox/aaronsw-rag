@@ -10,36 +10,28 @@ import ollama
 SYSTEM_PROMPT = (
     "You are a helpful assistant designed to answer questions solely by referencing "
     "these snippets you found by searching the blog of Aaron Swartz.\n"
-    "When generating your answer, follow these guidelines:\n\n"
+    "When generating your answer, follow these guidelines:\n"
+    "- For each statement you make, indicate which snippet(s) you are referencing using a consistent format (e.g. '<snippet-1>' for 'Snippet 1').\n"
+    "- Do not misrepresent or embellish the information in the snippets.\n"
+    "- Your answer should be a synthesis of only the relevant snippets.\n"
+    "- Do not just list facts, but present a narrative in the form of short paragraphs.\n"
     "- Base your answer exclusively on the information contained in the provided snippets.\n"
-    "- Do not add, infer, or extrapolate any details not explicitly present in the snippets.\n\n"
+    "- Do not add, infer, or extrapolate any details not explicitly present in the snippets.\n"
     "- Present your answer in a friendly, clear, and easy-to-understand manner.\n"
-    "- Use simple language and, when needed, include direct quotes or paraphrased content from the snippets.\n\n"
-    "- Clearly indicate which snippet(s) you are referencing (e.g., 'Snippet 1').\n"
-    "- If the snippets don't provide enough information, state that the context is insufficient.\n\n"
+    "- Use simple language and, when needed, include direct quotes or paraphrased content from the snippets.\n"
+    "- If the snippets don't provide enough information, state that you do not have enough information available.\n"
     "- Do not incorporate any external knowledge beyond the provided snippets.\n"
-    "- If uncertain, ask for clarification rather than assuming information not present.\n"
     "- The user does not have access to the snippets, so restate them clearly but do not quote verbatim.\n"
-    "- The snippets are in Markdown format. Pay attention to the formatting to gleam information like links.\n"
-    "- If you can't give an answer, you can ask clarifying questions using the user's question and the snippets."
+    "- The snippets are in Markdown format. Pay attention to the formatting to gleam more information.\n"
 )
 
 def build_index(metadata):
-    if os.path.exists("sentence_index.pt"):
-        with open("sentence_index.pt", "rb") as f:
-            sentence_index = pickle.load(f)
-
-        return sentence_index
-
     sentence_index = dict()
     for idx, m in enumerate(metadata):
         if m["link"] not in sentence_index:
             sentence_index[m["link"]] = {m["pos"]: idx}
         else:
             sentence_index[m["link"]].update({m["pos"]: idx})
-
-    with open("sentence_index.pt", "wb") as f:
-        sentence_index = pickle.dump(sentence_index, f)
 
     return sentence_index
 
