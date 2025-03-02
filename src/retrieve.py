@@ -31,7 +31,7 @@ SYSTEM_PROMPT_Q = (
     "You are a helpful assistant that has found the following text excerpts from different articles"
     " by Aaron Swartz after running the user's question through a search algorithm.\n"
     "Based on the user's question and the results of your search, do the following:\n"
-    "- Decompose the original question into logical parts.\n"
+    "- Decompose the original question into at least two (2) logical parts.\n"
     "- For each part, come up with search queries to feed into the algorithm.\n"
     "- Back your decomposition and suggested query with a reason.\n"
     "- Do not repeat ideas.\n"
@@ -149,7 +149,7 @@ if __name__ == "__main__":
     answer_documents = [
         d
         for s in suggestions
-        for d in get_documents(s["suggested_query"], metadata, k=2)
+        for d in get_documents(s["suggested_query"], metadata, k=3)
     ]
     print(format_documents(answer_documents))
     print()
