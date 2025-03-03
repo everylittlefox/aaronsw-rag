@@ -6,9 +6,9 @@
   - [ ] think about whether this would be better/worse, easier/harder than (distilled) chain-of-thought
   - [ ] generate subquestions whose answers progressively build towards the answer to the user's question
   - [ ] for each sub question
-    - [ ] embed and retrieve
+    - [x] embed and retrieve
     - [ ] rerank results
-    - [ ] append to context and generate
+    - [x] append to context and generate
     - [ ] append generation to running context
     - [ ] feed running context for next iteration
 - [x] decide on an embedding model
