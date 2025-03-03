@@ -1,0 +1,27 @@
+## TODO
+
+- [x] tokenize and build embedding vectors for the posts
+  - [x] chosen embedding model: all-MiniLM-L12-v2
+- [ ] scrape and generate example questions for use in least-to-most prompting
+  - [ ] think about whether this would be better/worse, easier/harder than (distilled) chain-of-thought
+  - [ ] generate subquestions whose answers progressively build towards the answer to the user's question
+  - [ ] for each sub question
+    - [ ] embed and retrieve
+    - [ ] rerank results
+    - [ ] append to context and generate
+    - [ ] append generation to running context
+    - [ ] feed running context for next iteration
+- [x] decide on an embedding model
+- [ ] decide on a cross-encoding (reranking) model
+- [x] decide on chunk size and the value of k for top-k results from vector search
+  - [x] chunk size set to semantic on the sentence level for now but retrived in 3-sentence contexts
+- [ ] decide on whether to do query rewriting or not
+  - [x] queries are currently being rewritten by a preliminary model prompt into "suggestions" whose similar documents are also retrieved.
+  - [ ] consider using a smaller finetuned model to reduce latency and minimise JSON parse failures
+- [ ] use TarGen to generate synthetic datasets for finetuning the generation model to follow a specific response format
+  - [ ] identified three scenarios: some documents are related to the question, no documents are related, all documents are only weakly related
+  - [ ] move the instructions in the SYSTEM prompt to the TarGen process
+  - [ ] see [sample chatGPT convo](https://chatgpt.com/share/67c5f178-9db4-8009-9104-0f4d6f2d62d8)
+- [ ] consider finetuning and using a model to generate summaries of posts
+  - [ ] could entire posts fit into the model's context?
+  - [ ] maybe cross-encoding and choosing a minimum score before adding to context?
