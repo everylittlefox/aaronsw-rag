@@ -1,5 +1,5 @@
 1. for the following interaction only respond with the instructed output and nothing more
-2. a retrieval-augmented generation system based on the topic "Coffee Culture" is to be be built
+2. a retrieval-augmented generation system based on the topic "Career Development" is to be be built
 3. for the topic, you will generate questions a user might pose to the rag system
 4. for each question, generate without repetition
    1. if the question is related to the topic,
@@ -19,7 +19,7 @@
 10. Remember, do not give an answer without references.
 11. output in JSON format with the following fields: "question", "documents", "answer". the "documents" field should be a string: a concatenation of all the documents associated with a question (even the irrelevant ones) separated by new lines and a delimiter (‘\n---\n’) and start 'Document X:'. for now, output just one example.
     1.  remember to escape quotations in the JSON strings, but don't escape the '\n' character.
-    2.  JSON strings do not support new lines.
+    2.  JSON strings do not allow for new lines. If you need to use new lines, use the newline character '\n'
 12. generate an example for a question that is unrelated to the topic
 13. generate an example for a question whose associated retrieved documents do not provide sufficient information to give a definitive answer
 14. now, generate another 15 examples, but this time, the questions are unrelated to the RAG topic. remember to follow the given instructions.
