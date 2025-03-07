@@ -1,5 +1,5 @@
 1. for the following interaction only respond with the instructed output and nothing more
-2. a retrieval-augmented generation system based on the topic "Career Development" is to be be built
+2. a retrieval-augmented generation system based on the topic "Mental Health" is to be be built
 3. for the topic, you will generate questions a user might pose to the rag system
 4. for each question, generate without repetition
    1. if the question is related to the topic,
@@ -20,6 +20,12 @@
 11. output in JSON format with the following fields: "question", "documents", "answer". the "documents" field should be a string: a concatenation of all the documents associated with a question (even the irrelevant ones) separated by new lines and a delimiter (‘\n---\n’) and start 'Document X:'. for now, output just one example.
     1.  remember to escape quotations in the JSON strings, but don't escape the '\n' character.
     2.  JSON strings do not allow for new lines. If you need to use new lines, use the newline character '\n'
-12. generate an example for a question that is unrelated to the topic
-13. generate an example for a question whose associated retrieved documents do not provide sufficient information to give a definitive answer
-14. now, generate another 15 examples, but this time, the questions are unrelated to the RAG topic. remember to follow the given instructions.
+
+example:
+```json
+{
+        "question": "What are the regulations for hiking with dogs in national parks?",
+        "documents": "Document 1: Shenandoah National Park is unique within the National Park System for its pet-friendly policies, allowing leashed dogs on 480 miles of trails including the Appalachian Trail within park boundaries. Dogs are prohibited only on 20 miles of specific trails where terrain is too dangerous or sensitive ecological areas exist. By contrast, nearby Great Smoky Mountains National Park prohibits dogs on all trails except for two short walking paths.\n---\nDocument 2: National Park Service regulations regarding dogs vary significantly between parks. Generally, dogs are prohibited on most trails within national parks to protect wildlife, natural resources, and other visitors' experiences. In parks where dogs are allowed on trails, they must be kept on leashes no longer than six feet at all times. Even in parks with strict trail limitations, dogs are typically permitted in developed areas such as campgrounds, picnic areas, and along roads.\n---\nDocument 3: Specific national parks with more permissive dog policies include Acadia National Park in Maine, which allows leashed dogs on most of its 100+ miles of hiking trails. The Cuyahoga Valley National Park in Ohio is similarly pet-friendly, permitting leashed dogs on all of its trails. However, even in these parks, dogs are not allowed in public buildings or on designated swimming beaches.\n---\nDocument 4: While national parks often have restrictive policies on dogs, national forests and Bureau of Land Management (BLM) lands typically allow dogs on most trails, though leash requirements vary by location. State parks fall somewhere in between, with policies determined by individual state park systems rather than federal regulations. These alternative public lands often provide comparable scenic experiences to national parks while offering more pet-friendly options.",
+        "answer": "Dog regulations in national parks follow varied but generally restrictive policies. Most national parks prohibit dogs on trails to protect wildlife and natural resources, though they typically allow dogs in developed areas such as campgrounds, picnic grounds, and along roads, with mandatory six-foot leash requirements where permitted <document-2>. For more dog-friendly outdoor experiences, national forests and Bureau of Land Management lands offer wider trail access for pets, while state parks have intermediate policies determined at the state level <document-4>. Notable exceptions to restrictive national park policies include Acadia National Park (Maine) and Cuyahoga Valley National Park (Ohio), which allow leashed dogs on most or all trails, though prohibitions remain for public buildings and swimming beaches <document-3>. Shenandoah National Park stands out for permitting leashed dogs on 480 miles of trails including its Appalachian Trail sections, restricting dogs from only 20 miles of dangerous terrain or sensitive ecological areas <document-1>."
+    }
+```
