@@ -1,5 +1,5 @@
 1. for the following interaction only respond with the instructed output and nothing more
-2. a retrieval-augmented generation system based on the topic "Mental Health" is to be be built
+2. a retrieval-augmented generation system based on the topic "Graphic Design" is to be be built
 3. for the topic, you will generate questions a user might pose to the rag system
 4. for each question, generate without repetition
    1. if the question is related to the topic,
