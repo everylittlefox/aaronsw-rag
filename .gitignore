@@ -8,3 +8,4 @@ venv/
 *.pt
 .env
 *scratch*
+*-finetuned-lora
