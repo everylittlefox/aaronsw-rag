@@ -8,7 +8,7 @@ import ollama
 from peft import PeftModel
 from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
 
-ollama.pull("llama3.2:3b-instruct-q4_K_S")
+# ollama.pull("llama3.2:3b-instruct-q4_K_S")
 
 PROMPT = """
 You are a factual answer generator that must respond only with information explicitly found in the provided retrieved documents. Do not include any external knowledge or assumptions. When constructing your answer, follow these guidelines:
@@ -188,7 +188,7 @@ if __name__ == "__main__":
         },
         {"role": "user", "content": query},
     ]
-    response = generator(messages, repetition_penalty=1.01)
+    response = generator(messages, repetition_penalty=1.1)
     print()
     print()
     print(response[0]["generated_text"][-1]["content"])

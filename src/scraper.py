@@ -60,7 +60,7 @@ def parse_post(url: str, soup: BeautifulSoup):
             embed_footnote(url, fn, footnotes, post_content, soup)
             fn = fn.find_next_sibling()
 
-    return md(str(post_content))
+    return post_content.text
 
 
 if __name__ == "__main__":
@@ -77,4 +77,5 @@ if __name__ == "__main__":
     with open(file_name, "wb") as f:
         pickle.dump(posts, f)
 
+    print(posts[-1])
     print("done!")
